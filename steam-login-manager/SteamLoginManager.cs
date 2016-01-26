@@ -371,5 +371,16 @@ namespace steam_login_manager
                 niIcon.Visible = false;
             }
         }
+
+        private void tIsSteamOnline_Tick(object sender, EventArgs e)
+        {
+            if (SteamIsRunning())
+            {
+                lIsSteamRunning.Text = "Yes";
+            } else
+            {
+                lIsSteamRunning.Text = "No";
+            }
+        }
     }
 }

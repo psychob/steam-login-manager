@@ -51,9 +51,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.lIsSteamRunning = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.niIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.tIsSteamOnline = new System.Windows.Forms.Timer(this.components);
             this.cmsListView.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -227,7 +228,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.lIsSteamRunning);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Location = new System.Drawing.Point(15, 350);
             this.groupBox1.Name = "groupBox1";
@@ -236,14 +237,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steam Status";
             // 
-            // label5
+            // lIsSteamRunning
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(325, 26);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 13);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Unknown";
+            this.lIsSteamRunning.AutoSize = true;
+            this.lIsSteamRunning.Location = new System.Drawing.Point(325, 26);
+            this.lIsSteamRunning.Name = "lIsSteamRunning";
+            this.lIsSteamRunning.Size = new System.Drawing.Size(53, 13);
+            this.lIsSteamRunning.TabIndex = 1;
+            this.lIsSteamRunning.Text = "Unknown";
             // 
             // label4
             // 
@@ -262,6 +263,12 @@
             this.niIcon.Text = "Steam Login Manager";
             this.niIcon.Visible = true;
             this.niIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.niIcon_MouseDoubleClick);
+            // 
+            // tIsSteamOnline
+            // 
+            this.tIsSteamOnline.Enabled = true;
+            this.tIsSteamOnline.Interval = 2500;
+            this.tIsSteamOnline.Tick += new System.EventHandler(this.tIsSteamOnline_Tick);
             // 
             // fSteamLoginManager
             // 
@@ -316,9 +323,10 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lIsSteamRunning;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NotifyIcon niIcon;
+        private System.Windows.Forms.Timer tIsSteamOnline;
     }
 }
 
