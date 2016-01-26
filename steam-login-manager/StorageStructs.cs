@@ -117,6 +117,24 @@ namespace steam_login_manager
             {
                 using (FileStream fs = new FileStream(path, FileMode.Open))
                 {
+                    byte[] prologue = new byte[]
+                    {
+                        // SLM0001
+                        83, 76, 77, 1, 0, 0, 0
+                    };
+
+                    byte[] readed = new byte[7];
+                    fs.Read(readed, 0, 7);
+
+                    if (!prologue.SequenceEqual(readed))
+                    {
+                        logins = new List<SteamLogin>();
+                        steamPath = "";
+                        hide = true;
+
+                        return false;
+                    }
+
                     SteamLoginDatabase sld = new SteamLoginDatabase();
 
                     RijndaelManaged rm = new RijndaelManaged();
@@ -162,6 +180,9 @@ namespace steam_login_manager
 
                 using (FileStream fs = new FileStream(path, FileMode.Create))
                 {
+                    fs.Write("SLM");
+                    fs.Write(1);
+
                     RijndaelManaged rm = new RijndaelManaged();
                     using (CryptoStream cs = new CryptoStream(fs,
                         rm.CreateEncryptor(CreateKeyFrom(password), GetIV()),

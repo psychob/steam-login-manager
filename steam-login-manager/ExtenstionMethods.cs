@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,18 @@ namespace steam_login_manager
         public static string Escape(this string str)
         {
             return str.Replace("\"", "\\\"");
+        }
+
+        public static void Write(this Stream str, string towrite)
+        {
+            byte[] arr = Encoding.UTF8.GetBytes(towrite);
+            str.Write(arr, 0, arr.Length);
+        }
+
+        public static void Write(this Stream str, int towrite)
+        {
+            byte[] arr = BitConverter.GetBytes(towrite);
+            str.Write(arr, 0, arr.Length);
         }
     }
 }
