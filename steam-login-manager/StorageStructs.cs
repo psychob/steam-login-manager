@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,6 +46,7 @@ namespace steam_login_manager
     {
         public List<SteamLogin> Logins;
         public string SteamPath;
+        public bool HideInTray;
     }
 
     internal static class SteamLoginLoader
@@ -100,34 +102,48 @@ namespace steam_login_manager
         }
 
         internal static bool IsValidDatabase(string path, string password,
-            out List<SteamLogin> logins, out string steamPath)
+            out List<SteamLogin> logins, out string steamPath, out bool hide)
         {
             if (!File.Exists(path))
             {
                 logins = new List<SteamLogin>();
                 steamPath = "";
+                hide = true;
+
                 return false;
             }
 
             try
             {
-                SteamLoginDatabase sld = new SteamLoginDatabase();
-
-                XmlSerializer xsr = new XmlSerializer(sld.GetType());
-                XmlReaderSettings xrs = new XmlReaderSettings();
-                xrs.CloseInput = true;
-                using (XmlReader xr = XmlReader.Create(path, xrs))
+                using (FileStream fs = new FileStream(path, FileMode.Open))
                 {
-                    sld = (SteamLoginDatabase)xsr.Deserialize(xr);
-                }
+                    SteamLoginDatabase sld = new SteamLoginDatabase();
 
-                steamPath = sld.SteamPath;
-                logins = sld.Logins;
+                    RijndaelManaged rm = new RijndaelManaged();
+                    using (CryptoStream cs = new CryptoStream(fs,
+                        rm.CreateDecryptor(CreateKeyFrom(password), GetIV()),
+                        CryptoStreamMode.Read))
+                    {
+
+                        XmlSerializer xsr = new XmlSerializer(sld.GetType());
+                        XmlReaderSettings xrs = new XmlReaderSettings();
+                        xrs.CloseInput = true;
+                        using (XmlReader xr = XmlReader.Create(cs, xrs))
+                        {
+                            sld = (SteamLoginDatabase)xsr.Deserialize(xr);
+                        }
+
+                        steamPath = sld.SteamPath;
+                        logins = sld.Logins;
+                        hide = sld.HideInTray;
+                    }
+                }
             }
             catch (Exception)
             {
                 logins = new List<SteamLogin>();
                 steamPath = "";
+                hide = true;
                 return false;
             }
 
@@ -135,27 +151,62 @@ namespace steam_login_manager
         }
 
         internal static void SaveDatabase(string path, string password,
-            string steamPath, List<SteamLogin> logins)
+            string steamPath, List<SteamLogin> logins, bool hide)
         {
             try
             {
                 SteamLoginDatabase sld = new SteamLoginDatabase();
                 sld.Logins = logins;
                 sld.SteamPath = steamPath;
+                sld.HideInTray = hide;
 
-                XmlSerializer xsr = new XmlSerializer(sld.GetType());
-                XmlWriterSettings xws = new XmlWriterSettings();
-                xws.CloseOutput = true;
-                xws.Indent = true;
-                xws.IndentChars = "\t";
-                using (XmlWriter xw = XmlWriter.Create(path, xws))
+                using (FileStream fs = new FileStream(path, FileMode.Create))
                 {
-                    xsr.Serialize(xw, sld);
+                    RijndaelManaged rm = new RijndaelManaged();
+                    using (CryptoStream cs = new CryptoStream(fs,
+                        rm.CreateEncryptor(CreateKeyFrom(password), GetIV()),
+                        CryptoStreamMode.Write))
+                    {
+
+                        XmlSerializer xsr = new XmlSerializer(sld.GetType());
+                        XmlWriterSettings xws = new XmlWriterSettings();
+                        xws.Indent = true;
+                        xws.IndentChars = "\t";
+                        using (XmlWriter xw = XmlWriter.Create(cs, xws))
+                        {
+                            xsr.Serialize(xw, sld);
+                        }
+                    }
                 }
             }
             catch (Exception)
             {
             }
+        }
+
+        private static byte[] CreateKeyFrom(string password)
+        {
+            var staticBytes = new byte[32] { 118, 123, 23, 17, 161, 152, 35, 68,
+                126, 213, 16, 115, 68, 217, 58, 108, 56, 218, 5, 78, 28, 128,
+                113, 208, 61, 56, 10, 87, 187, 162, 233, 38 };
+            var bytes = Encoding.UTF8.GetBytes(password);
+
+            if (bytes.Length > 32)
+                return bytes.Take(32).ToArray();
+            else if (bytes.Length < 32)
+            {
+                var lst = new List<byte>(bytes);
+                lst.AddRange(staticBytes);
+                return lst.Take(32).ToArray();
+            }
+
+            return bytes;
+        }
+
+        private static byte[] GetIV()
+        {
+            return new byte[16] { 33, 241, 14, 16, 103, 18, 14, 248, 4, 54, 18,
+                5, 60, 76, 16, 191 };
         }
 
         internal static void SaveLastLocation(string databasePath)

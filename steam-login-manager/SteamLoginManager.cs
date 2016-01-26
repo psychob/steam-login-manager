@@ -42,6 +42,19 @@ namespace steam_login_manager
             }
         }
 
+        private bool HideInTray
+        {
+            get
+            {
+                return checkBox1.Checked;
+            }
+
+            set
+            {
+                checkBox1.Checked = value;
+            }
+        }
+
         public fSteamLoginManager()
         {
             InitializeComponent();
@@ -88,6 +101,7 @@ namespace steam_login_manager
                     case fCreateOpenDatabase.CreateType.Create:
                         DatabasePath = db.Path;
                         dbPassword = db.Password;
+                        HideInTray = true;
 
                         run = false;
                         break;
@@ -95,21 +109,23 @@ namespace steam_login_manager
                     case fCreateOpenDatabase.CreateType.Open:
                         {
                             string steamPath = "";
+                            bool hide = true;
                             if (SteamLoginLoader.IsValidDatabase(db.Path, db.Password,
-                                out logins, out steamPath))
+                                out logins, out steamPath, out hide))
                             {
                                 DatabasePath = db.Path;
                                 dbPassword = db.Password;
                                 SteamPath = steamPath;
+                                HideInTray = hide;
 
                                 run = false;
                             }
                             else
-                                MessageBox.Show(String.Format("Can't open file: {0}!", DatabasePath));
+                                MessageBox.Show(String.Format("Can't open file: {0}!", db.Path));
                         }
                         break;
                 }
-            } while (run && !db.IsValidTicket);
+            } while (run || !db.IsValidTicket);
 
             SteamLoginLoader.SaveLastLocation(DatabasePath);
 
@@ -126,7 +142,8 @@ namespace steam_login_manager
 
         private void fSteamLoginManager_FormClosed(object sender, FormClosedEventArgs e)
         {
-            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath, logins);
+            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath,
+                logins, HideInTray);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -173,7 +190,8 @@ namespace steam_login_manager
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath, logins);
+            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath, logins,
+                HideInTray);
         }
 
         private void listView1_ItemActivate(object sender, EventArgs e)
@@ -333,19 +351,25 @@ namespace steam_login_manager
 
         private void fSteamLoginManager_Resize(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized)
+            if (HideInTray)
             {
-                niIcon.Visible = true;
-                niIcon.ShowBalloonTip(500);
-                Hide();
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    niIcon.Visible = true;
+                    niIcon.ShowBalloonTip(500);
+                    Hide();
+                }
             }
         }
 
         private void niIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Show();
-            WindowState = FormWindowState.Normal;
-            niIcon.Visible = false;
+            if (HideInTray)
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+                niIcon.Visible = false;
+            }
         }
     }
 }
