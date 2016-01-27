@@ -367,6 +367,18 @@ namespace steam_login_manager
                 Show();
                 WindowState = FormWindowState.Normal;
                 niIcon.Visible = false;
+            } else
+            {
+                switch (WindowState)
+                {
+                    case FormWindowState.Normal:
+                        WindowState = FormWindowState.Minimized;
+                        break;
+
+                    case FormWindowState.Minimized:
+                        WindowState = FormWindowState.Normal;
+                        break;
+                }
             }
         }
 
