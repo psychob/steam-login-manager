@@ -109,6 +109,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fCreateOpenDatabase";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Create or open database";
             this.Load += new System.EventHandler(this.fCreateOpenDatabase_Load);
             this.ResumeLayout(false);
