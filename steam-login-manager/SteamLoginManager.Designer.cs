@@ -45,7 +45,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.tbNewPassword = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -178,13 +178,13 @@
             this.textBox2.Size = new System.Drawing.Size(273, 20);
             this.textBox2.TabIndex = 4;
             // 
-            // textBox3
+            // tbNewPassword
             // 
-            this.textBox3.Location = new System.Drawing.Point(128, 299);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.PasswordChar = '*';
-            this.textBox3.Size = new System.Drawing.Size(209, 20);
-            this.textBox3.TabIndex = 5;
+            this.tbNewPassword.Location = new System.Drawing.Point(128, 299);
+            this.tbNewPassword.Name = "tbNewPassword";
+            this.tbNewPassword.PasswordChar = '*';
+            this.tbNewPassword.Size = new System.Drawing.Size(209, 20);
+            this.tbNewPassword.TabIndex = 5;
             // 
             // button2
             // 
@@ -194,6 +194,7 @@
             this.button2.TabIndex = 6;
             this.button2.Text = "Change";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
             // 
@@ -280,7 +281,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.tbNewPassword);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -311,7 +312,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox tbNewPassword;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

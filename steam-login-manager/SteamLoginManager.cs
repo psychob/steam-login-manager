@@ -142,8 +142,7 @@ namespace steam_login_manager
 
         private void fSteamLoginManager_FormClosed(object sender, FormClosedEventArgs e)
         {
-            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath,
-                logins, HideInTray);
+            SaveDatabase();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -190,8 +189,7 @@ namespace steam_login_manager
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath, logins,
-                HideInTray);
+            SaveDatabase();
         }
 
         private void listView1_ItemActivate(object sender, EventArgs e)
@@ -381,6 +379,28 @@ namespace steam_login_manager
             {
                 lIsSteamRunning.Text = "No";
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (tbNewPassword.Text.Length >= 3)
+            {
+                if (MessageBox.Show(this, "Do you really want to change password?", "Password change", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    dbPassword = tbNewPassword.Text;
+
+                    SaveDatabase();
+
+                    MessageBox.Show(this, "Password changed!", "Password changed!",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void SaveDatabase()
+        {
+            SteamLoginLoader.SaveDatabase(DatabasePath, dbPassword, SteamPath,
+                logins, HideInTray);
         }
     }
 }
