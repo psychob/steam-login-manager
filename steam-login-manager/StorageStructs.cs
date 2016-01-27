@@ -145,7 +145,7 @@ namespace steam_login_manager
 
                         XmlSerializer xsr = new XmlSerializer(sld.GetType());
                         XmlReaderSettings xrs = new XmlReaderSettings();
-                        xrs.CloseInput = true;
+                        xrs.CloseInput = false;
                         using (XmlReader xr = XmlReader.Create(cs, xrs))
                         {
                             sld = (SteamLoginDatabase)xsr.Deserialize(xr);
@@ -193,6 +193,7 @@ namespace steam_login_manager
                         XmlWriterSettings xws = new XmlWriterSettings();
                         xws.Indent = true;
                         xws.IndentChars = "\t";
+                        xws.CloseOutput = false;
                         using (XmlWriter xw = XmlWriter.Create(cs, xws))
                         {
                             xsr.Serialize(xw, sld);
