@@ -34,7 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.btnUnlockTimer = new System.Windows.Forms.Button();
+            this.btnUnlockDatabase = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tbPath
@@ -53,6 +53,7 @@
             this.tbPass.Size = new System.Drawing.Size(218, 20);
             this.tbPass.TabIndex = 1;
             this.tbPass.TextChanged += new System.EventHandler(this.tbPass_TextChanged);
+            this.tbPass.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbPass_KeyPress);
             // 
             // label1
             // 
@@ -81,23 +82,23 @@
             this.button1.Text = "...";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // btnUnlockTimer
+            // btnUnlockDatabase
             // 
-            this.btnUnlockTimer.Enabled = false;
-            this.btnUnlockTimer.Location = new System.Drawing.Point(15, 64);
-            this.btnUnlockTimer.Name = "btnUnlockTimer";
-            this.btnUnlockTimer.Size = new System.Drawing.Size(272, 42);
-            this.btnUnlockTimer.TabIndex = 5;
-            this.btnUnlockTimer.Text = "Unlock";
-            this.btnUnlockTimer.UseVisualStyleBackColor = true;
-            this.btnUnlockTimer.Click += new System.EventHandler(this.button2_Click);
+            this.btnUnlockDatabase.Enabled = false;
+            this.btnUnlockDatabase.Location = new System.Drawing.Point(15, 64);
+            this.btnUnlockDatabase.Name = "btnUnlockDatabase";
+            this.btnUnlockDatabase.Size = new System.Drawing.Size(272, 42);
+            this.btnUnlockDatabase.TabIndex = 5;
+            this.btnUnlockDatabase.Text = "Unlock";
+            this.btnUnlockDatabase.UseVisualStyleBackColor = true;
+            this.btnUnlockDatabase.Click += new System.EventHandler(this.button2_Click);
             // 
             // fCreateOpenDatabase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(299, 118);
-            this.Controls.Add(this.btnUnlockTimer);
+            this.Controls.Add(this.btnUnlockDatabase);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -122,6 +123,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btnUnlockTimer;
+        private System.Windows.Forms.Button btnUnlockDatabase;
     }
 }

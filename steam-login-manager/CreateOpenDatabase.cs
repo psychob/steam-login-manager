@@ -78,7 +78,15 @@ namespace steam_login_manager
                     break;
 
                 case CreateType.Open:
-                    Text = "Open Database";
+                    if (!File.Exists(Path))
+                    {
+                        Type = CreateType.Create;
+                        Text = "Create New Database";
+                    }
+                    else
+                    {
+                        Text = "Open Database";
+                    }
                     break;
             }
         }
@@ -94,9 +102,18 @@ namespace steam_login_manager
             string pass = tbPass.Text;
 
             if (pass.Length < 3)
-                btnUnlockTimer.Enabled = false;
+                btnUnlockDatabase.Enabled = false;
             else
-                btnUnlockTimer.Enabled = true;
+                btnUnlockDatabase.Enabled = true;
+        }
+
+        private void tbPass_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                btnUnlockDatabase.PerformClick();
+            }
         }
     }
 }
